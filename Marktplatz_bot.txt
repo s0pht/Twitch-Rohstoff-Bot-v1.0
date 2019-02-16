@@ -1,0 +1,19 @@
+Trade Bot:
+
+sqlite Datenbank
+
+
+Berry Tabelle
+	-berry
+	-einzahlen betrag
+	-kaufen anzahl rohstoff
+	-verkaufen anzahl rohstoff
+	-
+Konto Tabelle
+	-konto
+	-auszahlen betrag
+
+
+rohstoff Tabelle
+	-rohstoffe
+
