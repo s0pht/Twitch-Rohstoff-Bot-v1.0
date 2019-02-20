@@ -41,6 +41,7 @@ client.on("chat", (channel, user, message) => {
       let target = 's0pht'
       var user = user.username;
       let wert = 0.00;
+  // berry checken
   if (message === '!berry'){
     
     let sql = `SELECT *
@@ -71,8 +72,9 @@ client.on("chat", (channel, user, message) => {
   });
 
 
-
+  // Rohstoffe checken
   }
+  // rohstoff checken
   if (message === '!rohstoffe'){
 
     let sql = `SELECT *
@@ -91,7 +93,7 @@ client.on("chat", (channel, user, message) => {
     })
     
   }
-
+  // kaufen funktion
   if (message.startsWith('!buy')){
     var a = message.split(/\s+/).slice(0,3);
     if (a.length < 3){
@@ -175,11 +177,7 @@ client.on("chat", (channel, user, message) => {
     
 
   }
-
-  
-
   // verkaufen Funktion
-
   if (message.startsWith('!sell')){
     var a = message.split(/\s+/).slice(0,3);
     if (a.length < 3){
@@ -280,7 +278,7 @@ client.on("chat", (channel, user, message) => {
     
 
   }
-
+  // Inventar checken
   if (message === '!inventar'){
 
     let sql = 'SELECT * FROM handel WHERE user=?'
@@ -294,6 +292,66 @@ client.on("chat", (channel, user, message) => {
       client.say(target,a)
 
     })
+  }
+  // Berry senden
+  if (message.startsWith('!senden')){
+    var a = message.split(/\s+/).slice(0,3);
+    if (a.length < 3){
+      
+      client.say(target,'Bitte !senden <berry> <empfaenger> eingeben');
+    }
+
+    if (isNaN(parseInt(a[1])) == false  ){
+      let sql = 'SELECT * FROM bargeldTable WHERE name=?'
+      db.get(sql,a[2],function(err,row){
+                            
+      if (row === undefined){
+        client.say(target,'Den User ' + a[2] + ' gibt es nicht')
+      }
+      else {
+        // Berry von sender checken und vergleichen mit a2 
+        let sql = 'SELECT points FROM bargeldTable WHERE name=?'
+        db.get(sql,user,function(err,row){
+          anzahl = a[1]
+          anzahlBargeld = row.points
+
+          if (anzahl > anzahlBargeld){
+            client.say(target,'So viele Berry hast du nicht')
+          }
+          else {
+            // neues bargeld sender
+            bargeldSender = anzahlBargeld - anzahl
+            let sql = 'UPDATE bargeldTable SET points=? WHERE name=?'
+            db.run(sql,bargeldSender,user,rohstoffString,function(err,row){
+              // bargeld von empfaenger herausfinden und updaten
+              let sql = 'SELECT points FROM bargeldTable WHERE name=?'
+              db.get(sql,a[2],function(err,row){
+                var berryEmpfaenger = parseFloat(row.points)
+                var neuBerryEmpfaenger = berryEmpfaenger + parseFloat(a[1])
+                
+                let sql = 'UPDATE bargeldTable SET points=? WHERE name=?'
+                db.run(sql,neuBerryEmpfaenger,a[2],function(err,row){
+                  client.say(target, a[1] + ' Berry an ' + a[2] + ' transferiert')
+                })
+              })
+
+            })
+            
+          }
+
+        })
+      }
+      })
+    }
+    if (isNaN(parseInt(a[1])) == true) {
+      client.say(target,'Bitte !senden <berry> <empfaenger> eingeben');
+    }
+
+
+  }
+  // gamble
+  if (message.startsWith('!gamble')){
+    client.say(target,'gamblen kommt bald!')
   }
 })
 
