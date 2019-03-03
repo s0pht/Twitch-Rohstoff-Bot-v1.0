@@ -1,7 +1,0 @@
-Holz: 8.18
- Getreide: 23.5
- Stein: 30.75
- Eisen: 65.22
- Kupfer: 186.64
- Gold: 1180.15
- Diamant: 7208.49

@@ -1,0 +1,7 @@
+Holz: 15.98
+Getreide: 23.58
+Stein: 30.97
+Eisen: 144.82
+Kupfer: 220.18
+Gold: 993.88
+Diamant: 5300.32

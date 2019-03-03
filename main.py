@@ -5,6 +5,8 @@ from autocurrency import auto
 import schedule
 import time
 from multiprocessing import Process
+import json
+from pprint import pprint
 
 rohstoffe()
 auto()

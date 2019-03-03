@@ -39,7 +39,7 @@ def auto():
         
         listMods = test['chatters']['moderators']
         listVips = test['chatters']['vips']
-        
+        listStreamer = test['chatters']['broadcaster']
 
         # loescht alle Bots und co
         for i in listBanned:
@@ -104,6 +104,10 @@ def auto():
             punkteDazu(i)
                 
         for i in listVips:
+            anlegen(i)
+            punkteDazu(i)
+
+        for i in listStreamer:
             anlegen(i)
             punkteDazu(i)
         gc.collect()

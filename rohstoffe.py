@@ -145,7 +145,7 @@ def rohstoffe():
         cursor.execute("UPDATE rohstoffe SET preis=? WHERE name=?", (diamant,'diamant'))
         connection.commit()
 
-        file = open('rohstof.txt','w') 
+        file = open('rohstoff.txt','w') 
         file.write("Holz: " + str(holz)) 
         file.write("\nGetreide: " + str(getreide))
         file.write("\nStein: " + str(stein))

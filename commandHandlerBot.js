@@ -3,7 +3,6 @@ const sqlite3 = require('sqlite3').verbose();
 
 
 
-
 let db = new sqlite3.Database('test.db');
 
 // Rohstoffe laden
@@ -65,7 +64,7 @@ client.on("chat", (channel, user, message) => {
         })
       }
       else {
-        client.say(target, `${row.points} Berry`)
+        client.say(target, row.points.toFixed(2) + ' Berry')
       }
       return row
       
@@ -83,7 +82,7 @@ client.on("chat", (channel, user, message) => {
       
 
       
-      client.say('s0pht',row[0]['name'] + ' : ' + row[0]['preis'] + ' | ' +
+      client.whisper(user,row[0]['name'] + ' : ' + row[0]['preis'] + ' | ' +
                         row[1]['name'] + ' : ' + row[1]['preis'] + ' | ' +
                         row[2]['name'] + ' : ' + row[2]['preis'] + ' | ' +
                         row[3]['name'] + ' : ' + row[3]['preis'] + ' | ' +
@@ -105,7 +104,7 @@ client.on("chat", (channel, user, message) => {
     if (isNaN(parseInt(a[1])) == false  ){
       // sql query ob der user ueberhaupt kaufen kann mit sienem geld also brauchen wir das momentane geld und vergleichen mit dem preis mal anzahl vom rohstoff
        var anzahlRohstoff = parseInt(a[1])
-       var rohstoffString = a[2];
+       var rohstoffString = a[2].toLowerCase();
 
        if (rohstoffString === 'holz' || rohstoffString === 'getreide' ||rohstoffString === 'stein' ||rohstoffString === 'eisen' ||rohstoffString === 'kupfer' ||rohstoffString === 'gold' ||rohstoffString === 'diamand'){
 
@@ -137,8 +136,8 @@ client.on("chat", (channel, user, message) => {
                               // hier wird inserted
                               let sql = 'INSERT INTO handel VALUES(?,?,?)'
                               db.run(sql,user,anzahlRohstoff,rohstoffString,function(err,row){
-                                client.say(target,anzahlRohstoff + " " + rohstoffString + ' für insgesamt ' + preisGesamt + ' Berry gekauft (' + preisEinzeln + '/' + rohstoffString + ')');
-                                client.whisper(target,anzahlRohstoff + " " + rohstoffString + ' für insgesamt ' + preisGesamt + ' Berry gekauft (' + preisEinzeln + '/' + rohstoffString + ')');
+                                
+                                client.whisper(user,anzahlRohstoff + " " + rohstoffString + ' für insgesamt ' + preisGesamt.toFixed(2) + ' Berry gekauft (' + preisEinzeln + '/' + rohstoffString + ')');
                               })
                             }
                             else {
@@ -146,8 +145,8 @@ client.on("chat", (channel, user, message) => {
                               var anzahl = row.anzahl;
                               let sql = 'UPDATE handel SET anzahl=? WHERE user=? AND rohstoff=?'
                               db.run(sql,anzahl + anzahlRohstoff,user,rohstoffString,function(err,row){
-                                client.whisper(target,anzahlRohstoff + " " + rohstoffString + ' für insgesamt ' + preisGesamt + ' Berry gekauft (' + preisEinzeln + '/' + rohstoffString + ')');
-                                client.say(target,anzahlRohstoff + " " + rohstoffString + ' für insgesamt ' + preisGesamt + ' Berry gekauft (' + preisEinzeln + '/' + rohstoffString + ')');
+                                client.whisper(user,anzahlRohstoff + " " + rohstoffString + ' für insgesamt ' + preisGesamt.toFixed(2) + ' Berry gekauft (' + preisEinzeln + '/' + rohstoffString + ')');
+                                
                               })
                             }
                           })
@@ -194,7 +193,7 @@ client.on("chat", (channel, user, message) => {
 
 
        var anzahlRohstoff = parseInt(a[1])
-       var rohstoffString = a[2];
+       var rohstoffString = a[2].toLowerCase();
 
        if (rohstoffString === 'holz' || rohstoffString === 'getreide' ||rohstoffString === 'stein' ||rohstoffString === 'eisen' ||rohstoffString === 'kupfer' ||rohstoffString === 'gold' ||rohstoffString === 'diamand'){
 
@@ -239,8 +238,7 @@ client.on("chat", (channel, user, message) => {
                           let sql = 'UPDATE handel SET anzahl=? WHERE user=? AND rohstoff=?'
                               db.run(sql,anzahl - anzahlRohstoff,user,rohstoffString,function(err,row){
 
-                                client.whisper(target,anzahlRohstoff + " " + rohstoffString + ' für insgesamt ' + preisGesamt + ' Berry verkauft (' + preisEinzeln + '/' + rohstoffString + ')');
-                                client.say(target,anzahlRohstoff + " " + rohstoffString + ' für insgesamt ' + preisGesamt + ' Berry verkauft (' + preisEinzeln + '/' + rohstoffString + ')');
+                                client.whisper(user,anzahlRohstoff + " " + rohstoffString + ' für insgesamt ' + preisGesamt.toFixed(2) + ' Berry verkauft (' + preisEinzeln + '/' + rohstoffString + ')');
 
                               })
 
@@ -351,7 +349,70 @@ client.on("chat", (channel, user, message) => {
   }
   // gamble
   if (message.startsWith('!gamble')){
-    client.say(target,'gamblen kommt bald!')
+    // check ob es sich um eine zahl handelt
+    var a = message.split(/\s+/).slice(0,2);
+    var berry = parseFloat(a[1])
+    if (a.length < 2){
+      
+      client.say(target,'Bitte !gamble <berry> eingeben');
+    }
+
+    if (isNaN(parseInt(a[1])) == false  ){
+      let sql = 'SELECT * FROM bargeldTable WHERE name=?'
+      db.get(sql,user,function(err,row){
+
+        if (row.points < berry){
+          client.say(target,'Du hast nicht genügend Berry.')
+        }
+        else {
+          var randomNumber = Math.floor(Math.random() * 101); 
+          if (randomNumber <= 45){ //gewonnen
+            let sql = 'UPDATE bargeldTable SET points=? WHERE name=?'
+                db.run(sql,berry + row.points,user,function(err,row){
+                  client.say(target, randomNumber + '. Glückwunsch, du hast ' + berry * 2 + ' Berry gewonnen!')
+                })
+          }
+          if (randomNumber == 100){ //jackpot
+            let sql = 'UPDATE bargeldTable SET points=? WHERE name=?'
+                db.run(sql,berry * 3  + row.points,user,function(err,row){
+                  client.say(target, randomNumber + '. JACKPOT, du hast ' + berry * 4 + ' Berry gewonnen!')
+                })
+          }
+          if (randomNumber > 45) { //verloren
+            let sql = 'UPDATE bargeldTable SET points=? WHERE name=?'
+                db.run(sql,row.points - berry,user,function(err,row){
+                  client.say(target, randomNumber + '. Schade, du hast ' + berry + ' Berry verloren...')
+                })
+          }
+        }
+
+        console.log(randomNumber)
+      })
+    }
+  
+    if (isNaN(parseInt(a[1])) == true  ){
+      client.say(target,'Bitte !gamble <berry> eingeben')
+    }
+    
+  }
+
+  if (message === '!top'){
+
+    let sql = 'SELECT * FROM bargeldTable ORDER BY points'
+      db.all(sql,function(err,row){
+        
+
+        for (var i = 0; i <= 10; i++ ){
+          var liste = ''
+          console.log(liste.concat(row.name + ' ' + row.points))
+          
+        }
+
+        
+
+      })
+    // kommt noch
+
   }
 })
 
