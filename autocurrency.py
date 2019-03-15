@@ -18,7 +18,7 @@ def auto():
     def autoCurrency():
 
         
-        r = requests.get('http://tmi.twitch.tv/group/user/s0pht/chatters')
+        r = requests.get('http://tmi.twitch.tv/group/user/<yourStream>/chatters')
         r.encoding
         test = r.json()
         banned = {'bots':['freast',
