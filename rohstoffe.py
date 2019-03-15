@@ -11,7 +11,7 @@ import socket
 
 def rohstoffe():
     
-    connection = sqlite3.connect('test.db')
+    connection = sqlite3.connect('currency.db')
     cursor = connection.cursor()
 
     rohstoffe = 'CREATE TABLE IF NOT EXISTS rohstoffe(name text,preis FLOAT)'

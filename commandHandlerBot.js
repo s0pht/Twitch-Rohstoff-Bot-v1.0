@@ -3,7 +3,7 @@ const sqlite3 = require('sqlite3').verbose();
 
 
 
-let db = new sqlite3.Database('test.db');
+let db = new sqlite3.Database('currency.db');
 
 // Rohstoffe laden
 
@@ -11,8 +11,8 @@ let db = new sqlite3.Database('test.db');
 // Define configuration options
 const opts = {
   identity: {
-    username: 'shanks_onepiece',
-    password: 'oauth:fjk4sasdwwg23zfp9x3972oeob0dfx'
+    username: 'Your Twitch Username',
+    password: 'oauth code'
   },
   channels: [
     's0pht'

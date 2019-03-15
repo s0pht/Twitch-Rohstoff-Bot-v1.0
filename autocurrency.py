@@ -4,7 +4,7 @@ import schedule
 import gc
 
 def auto():
-    connection = sqlite3.connect('test.db')
+    connection = sqlite3.connect('currency.db')
     cursor = connection.cursor()
 
     kontoTable = 'CREATE TABLE IF NOT EXISTS kontoTable(name text,points FLOAT)'
