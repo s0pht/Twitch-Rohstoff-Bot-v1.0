@@ -37,7 +37,7 @@ client.connect();
 client.on("chat", (channel, user, message) => {
       
 
-      let target = 's0pht'
+      let target = '<yourStream>' // your twitch name
       var user = user.username;
       let wert = 0.00;
   // berry checken
