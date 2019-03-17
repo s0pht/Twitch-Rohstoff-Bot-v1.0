@@ -4,7 +4,7 @@ Rohstoffbot Mix aus Python und Nodejs
 
 Bedienungsanleitung:
 
-Trage deinen Twitch Botnamen und oauth Passwort in der commandHandlerBot.js ein.
+Trage deinen Twitch Botnamen und oauth Passwort in der commandHandlerBot.js ein. Ausserdem musst du der target Variable noch deinen Stream Namen uebergeben.
 Ersetze in der Autocurrency.py Datei <yourName> mit deinem Stream.
 
 Starte main.py ueber das Terminal und schon sollte alles funktionieren.
